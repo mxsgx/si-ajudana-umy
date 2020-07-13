@@ -174,5 +174,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{submission}', 'SubmissionController@show')
             ->name('submission.show')
             ->middleware('can:view,submission');
+        Route::get('/{submission}/pdf', 'SubmissionController@pdf')
+            ->name('submission.pdf')
+            ->middleware('can:view,submission');
     });
 });

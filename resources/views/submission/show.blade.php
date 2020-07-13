@@ -13,6 +13,7 @@
                 <div class="card">
                     <div class="card-header bg-umy">{{ __('Detail Pengajuan') }}</div>
                     <div class="card-body">
+                        <h3>Detail</h3>
                         <div class="table-responsive py-2">
                             <table class="table table-bordered">
                                 <tbody>
@@ -65,6 +66,7 @@
                         </div>
 
                         @if($submission->financials->count())
+                            <h3>Rincian Biaya</h3>
                             <div class="table-responsive py-2">
                                 <table class="table table-bordered">
                                     <tbody>
@@ -85,6 +87,7 @@
                         @endif
 
                         @if($submission->attachments()->get()->count())
+                            <h3>Lampiran</h3>
                             <div class="table-responsive py-2">
                                 <table class="table table-bordered">
                                     <tbody>
@@ -101,6 +104,8 @@
                         @endif
 
                         <div class="d-flex justify-content-end">
+                            <a href="{{ route('submission.pdf', compact('submission')) }}"
+                               class="btn btn-secondary mr-2">{{ __('PDF') }}</a>
                             @can('update', $submission)
                                 <a href="{{ route('submission.edit', compact('submission')) }}"
                                    class="btn btn-primary mr-2">{{ __('Ubah') }}</a>

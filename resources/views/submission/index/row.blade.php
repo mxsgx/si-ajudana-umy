@@ -10,5 +10,6 @@
                class="btn btn-sm btn-success m-1">{{ __('Sunting') }}</a>
         @endcan
         <a href="{{ route('submission.show', compact('submission')) }}" class="btn btn-sm btn-info m-1">{{ __('Lihat') }}</a>
+        <a href="{{ route('submission.pdf', compact('submission')) }}" class="btn btn-sm btn-secondary m-1">{{ __('PDF') }}</a>
     </td>
 </tr>

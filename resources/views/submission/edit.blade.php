@@ -323,6 +323,8 @@
                             </div>
 
                             <div class="d-flex justify-content-end">
+                                <a href="{{ route('submission.show', compact('submission')) }}" class="btn btn-success mr-2">{{ __('Lihat') }}</a>
+                                <a href="{{ route('submission.pdf', compact('submission')) }}" class="btn btn-secondary mr-2">{{ __('PDF') }}</a>
                                 <a href="#" data-toggle="modal" data-target="#delete" class="btn btn-danger mr-2">{{ __('Hapus') }}</a>
                                 <button type="submit" class="btn btn-primary">{{ __('Ubah') }}</button>
                             </div>

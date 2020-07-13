@@ -441,4 +441,9 @@ class SubmissionController extends Controller
             'content' => __('Pengajuan sudah ditolak.'),
         ]);
     }
+
+    public function pdf(Submission $submission)
+    {
+        return \PDF::loadView('submission.pdf', compact('submission'))->stream();
+    }
 }
