@@ -34,6 +34,7 @@ class Submission extends Model
         'schema',
         'grant',
         'category_id',
+        'authorized_by',
     ];
 
     /**
@@ -45,11 +46,18 @@ class Submission extends Model
         'date_start' => 'date'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function lecturer()
     {
         return $this->belongsTo(Lecturer::class);
     }
 
+    /**
+     * @param $value
+     * @return \Illuminate\Support\Optional|mixed
+     */
     public function getDateEndAttribute($value)
     {
         return optional($value, function ($date) {
@@ -57,6 +65,10 @@ class Submission extends Model
         });
     }
 
+    /**
+     * @param $value
+     * @return \Illuminate\Support\Optional|mixed
+     */
     public function getTimeStartAttribute($value)
     {
         return optional($value, function ($time) {
@@ -64,6 +76,10 @@ class Submission extends Model
         });
     }
 
+    /**
+     * @param $value
+     * @return \Illuminate\Support\Optional|mixed
+     */
     public function getTimeEndAttribute($value)
     {
         return optional($value, function ($time) {
@@ -71,6 +87,9 @@ class Submission extends Model
         });
     }
 
+    /**
+     * @return array
+     */
     public function getFinancialIdsAttribute()
     {
         $ids = [];
@@ -82,6 +101,17 @@ class Submission extends Model
         return $ids;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function financials()
+    {
+        return $this->belongsToMany(Financial::class);
+    }
+
+    /**
+     * @return array
+     */
     public function getFinancialValuesAttribute()
     {
         $values = [];
@@ -93,6 +123,9 @@ class Submission extends Model
         return $values;
     }
 
+    /**
+     * @return array
+     */
     public function getParticipantIdsAttribute()
     {
         $ids = [];
@@ -104,6 +137,17 @@ class Submission extends Model
         return $ids;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function participants()
+    {
+        return $this->belongsToMany(Participant::class);
+    }
+
+    /**
+     * @return array
+     */
     public function getAttachmentsAttribute()
     {
         $ids = [];
@@ -115,25 +159,6 @@ class Submission extends Model
         return $ids;
     }
 
-    public function getReadableDatetimeAttribute()
-    {
-        $str = $this->date_start->translatedFormat('d F Y');
-
-        if ($this->time_start) {
-            $str .= ' '.$this->time_start->format('H:i');
-        }
-
-        if ($this->date_end) {
-            $str .= ' s.d '.$this->date_end->translatedFormat('d F Y');
-        }
-
-        if ($this->time_end) {
-            $str .= ' '.$this->time_end->format('H:i');
-        }
-
-        return $str;
-    }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -143,21 +168,30 @@ class Submission extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return string
      */
-    public function financials()
+    public function getReadableDatetimeAttribute()
     {
-        return $this->belongsToMany(Financial::class);
+        $str = $this->date_start->translatedFormat('d F Y');
+
+        if ($this->time_start) {
+            $str .= ' pukul '.$this->time_start->format('H:i').' WIB';
+        }
+
+        if ($this->date_end) {
+            $str .= ' s.d '.$this->date_end->translatedFormat('d F Y');
+        }
+
+        if ($this->time_end) {
+            $str .= ' pukul '.$this->time_end->format('H:i').' WIB';
+        }
+
+        return $str;
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function participants()
-    {
-        return $this->belongsToMany(Participant::class);
-    }
-
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -169,5 +203,13 @@ class Submission extends Model
     public function attachmentSubmissions()
     {
         return $this->hasMany(AttachmentSubmission::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function authorized()
+    {
+        return $this->belongsTo(User::class, 'authorized_by', 'id');
     }
 }

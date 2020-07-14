@@ -360,12 +360,24 @@ class SubmissionController extends Controller
         return response()->file(storage_path('attachments/'.$attachmentSubmission->name));
     }
 
-    public function authorizeSubmission(Submission $submission)
+    public function authorizeSubmission(Request $request, Submission $submission)
     {
         if ($submission->status === 'unauthorized') {
-            if ($submission->update([
+            $data = [
                 'status' => 'authorized',
-            ])) {
+            ];
+
+            if (auth()->user()->role === 'admin') {
+                $this->validate($request, [
+                    'authorized_by' => ['required', 'exists:users,id'],
+                ]);
+
+                $data['authorized_by'] = $request->get('authorized_by');
+            } elseif (auth()->user()->role === 'head-of-program-study') {
+                $data['authorized_by'] = auth()->user()->id;
+            }
+
+            if ($submission->update($data)) {
                 return redirect()->back()->with('notice', [
                     'type' => 'success',
                     'dismissible' => true,
@@ -391,8 +403,8 @@ class SubmissionController extends Controller
     {
         if ($submission->status === 'authorized') {
             if ($submission->update([
-                    'status' => 'approved',
-                ])) {
+                'status' => 'approved',
+            ])) {
                 return redirect()->back()->with('notice', [
                     'type' => 'success',
                     'dismissible' => true,
@@ -419,8 +431,8 @@ class SubmissionController extends Controller
         $data = request()->validate(['note' => 'nullable|string']);
         if ($submission->status === 'authorized') {
             if ($submission->update([
-                'status' => 'rejected',
-            ] + $data)) {
+                    'status' => 'rejected',
+                ] + $data)) {
                 return redirect()->back()->with('notice', [
                     'type' => 'success',
                     'dismissible' => true,

@@ -35,6 +35,12 @@
                                         <td>{{ $submission->note ?? '-' }}</td>
                                     </tr>
                                 @endif
+                                @if($submission->status !== 'unauthorized')
+                                    <tr>
+                                        <th>{{ __('Diauthorisasi Oleh') }}</th>
+                                        <td>{{ optional($submission->authorized)->name ?? '(Belum Diatur)' }}</td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <th>{{ __('Tanggal') }}</th>
                                     <td>{{ $submission->readable_datetime }}</td>
@@ -95,7 +101,9 @@
                                         @php($attachmentSubmission = $attachment->pivot)
                                         <tr>
                                             <th>{{ $attachment->name }}</th>
-                                            <td><a href="{{ route('submission.attachment', compact(['submission', 'attachmentSubmission'])) }}" target="_blank">{{ $attachment->pivot->file_name }}</a></td>
+                                            <td>
+                                                <a href="{{ route('submission.attachment', compact(['submission', 'attachmentSubmission'])) }}"
+                                                   target="_blank">{{ $attachment->pivot->file_name }}</a></td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -148,8 +156,20 @@
                      method="patch"
                      :action="route('submission.authorize', compact('submission'))"
                      :title="__('Konfirmasi Authorisasi')"
-                     classes="modal-dialog-centered modal-dialog-scrollable"
-                     :message="__('Authorisasi pengajuan ini?')">
+                     classes="modal-dialog-centered modal-dialog-scrollable">
+                <x-slot name="message">
+                    @if(auth()->user()->role === 'admin')
+                        <p>{{ __('Tolak pengajuan ini?') }}</p>
+                        <label for="authorized_by" class="d-block">{{ __('Di authorisasi oleh:') }}</label>
+                        <select name="authorized_by" id="authorized_by" class="form-control">
+                            @foreach(\App\User::where('role', '=', 'head-of-program-study')->get() as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    @else
+                        <p>{{ __('Authorisasi pengajuan ini?') }}</p>
+                    @endif
+                </x-slot>
             </x-modal>
         @endcan
     @endif

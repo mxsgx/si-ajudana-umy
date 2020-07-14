@@ -47,6 +47,10 @@ class SubmissionRequest extends FormRequest
         if ($role === 'admin') {
             $rules['lecturer_id'] = ['required', 'exists:lecturers,id'];
             $rules['status'] = ['required', 'in:unauthorized,authorized,approved,rejected'];
+
+            if ($this->get('status') !== 'unauthorized') {
+                $rules['authorized_by'] = ['required', 'exists:users,id'];
+            }
         }
 
         if ($method === 'patch') {

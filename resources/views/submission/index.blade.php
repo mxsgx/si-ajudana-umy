@@ -21,6 +21,7 @@
                         <thead>
                         <tr>
                             <th scope="col">{{ __('Nama') }}</th>
+                            <th scope="col">{{ __('Status') }}</th>
                             <th scope="col">{{ __('Aksi') }}</th>
                         </tr>
                         </thead>

@@ -12,7 +12,7 @@
                     <a class="btn btn-outline-primary"
                        href="{{ route('submission.create') }}">&plus; {{ __('Tambah Baru') }}</a>
                 </div>
-                <div class="card">
+                <div class="card" x-data="data()">
                     <div class="card-header bg-umy">{{ __('Detail Pengajuan') }}</div>
                     <div class="card-body">
                         <form action="{{ route('submission.update', compact('submission')) }}" method="post"
@@ -37,6 +37,7 @@
                                 <div class="form-group">
                                     <label for="status">{{ __('Status') }}</label>
                                     <select name="status" id="status" required
+                                            @change="statusOnChange($event.target.value)"
                                             class="form-control @error('lecturer_id') is-invalid @enderror">
                                         @foreach(\App\Submission::getModel()->statuses as $status => $name)
                                             <option value="{{ $status }}"
@@ -47,6 +48,22 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>
+
+                                <template x-if="status !== 'unauthorized'">
+                                    <div class="form-group">
+                                        <label for="authorized_by">{{ __('Diauthorisasi Oleh:') }}</label>
+                                        <select name="authorized_by" id="authorized_by" required
+                                                class="form-control @error('lecturer_id') is-invalid @enderror">
+                                            @foreach(\App\User::where('role', '=', 'head-of-program-study')->get() as $user)
+                                                <option value="{{ $user->id }}"
+                                                        @if($submission->authorized_by == $user->id) selected @endif>{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('status')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </template>
                             @endif
 
                             <div class="form-group">
@@ -323,9 +340,12 @@
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <a href="{{ route('submission.show', compact('submission')) }}" class="btn btn-success mr-2">{{ __('Lihat') }}</a>
-                                <a href="{{ route('submission.pdf', compact('submission')) }}" class="btn btn-secondary mr-2">{{ __('PDF') }}</a>
-                                <a href="#" data-toggle="modal" data-target="#delete" class="btn btn-danger mr-2">{{ __('Hapus') }}</a>
+                                <a href="{{ route('submission.show', compact('submission')) }}"
+                                   class="btn btn-success mr-2">{{ __('Lihat') }}</a>
+                                <a href="{{ route('submission.pdf', compact('submission')) }}"
+                                   class="btn btn-secondary mr-2">{{ __('PDF') }}</a>
+                                <a href="#" data-toggle="modal" data-target="#delete"
+                                   class="btn btn-danger mr-2">{{ __('Hapus') }}</a>
                                 <button type="submit" class="btn btn-primary">{{ __('Ubah') }}</button>
                             </div>
                         </form>
@@ -338,6 +358,15 @@
 
 @push('body')
     <script type="text/javascript">
+        function data() {
+            return {
+                status: '{{ $submission->status }}',
+                statusOnChange(val) {
+                    this.status = val;
+                },
+            }
+        }
+
         function calculateFinance(e) {
             let total = 0;
 

@@ -1,5 +1,6 @@
 <tr>
     <td>{{ $submission->title }}</td>
+    <td>{{ $submission->statuses[$submission->status] }}</td>
     <td>
         @can('delete', $submission)
             <a href="{{ route('submission.destroy', compact('submission')) }}" class="btn btn-sm btn-danger m-1"
