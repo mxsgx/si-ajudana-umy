@@ -63,7 +63,7 @@
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            font-size: 1rem;
+            font-size: 0.5rem;
             font-weight: 400;
             line-height: 1.5;
             color: #212529;
@@ -10444,15 +10444,15 @@
         }
 
         body {
-            font-size: 14px;
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
 <div>
-    <h3>Detail Pengajuan</h3>
-    <div class="table-responsive py-2">
-        <table class="table table-bordered">
+    <h6>Detail Pengajuan</h6>
+    <div class="table-responsive mb-0">
+        <table class="table table-bordered table-sm">
             <tbody>
             <tr>
                 <th>{{ __('Nama Dosen') }}</th>
@@ -10503,9 +10503,9 @@
     </div>
 
     @if($submission->financials->count())
-        <h3>Rincian Biaya</h3>
-        <div class="table-responsive py-2">
-            <table class="table table-bordered">
+        <h6>Rincian Biaya</h6>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm">
                 <tbody>
                 @foreach($submission->financials()->withPivot(['amount'])->get() as $financial)
                     <tr>
@@ -10524,9 +10524,9 @@
     @endif
 
     @if($submission->attachments()->get()->count())
-        <h3>Lampiran</h3>
-        <div class="table-responsive py-2">
-            <table class="table table-bordered">
+        <h6>Lampiran</h6>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm">
                 <tbody>
                 @foreach($submission->attachments()->withPivot(['file_name', 'name'])->get() as $attachment)
                     @php($attachmentSubmission = $attachment->pivot)
@@ -10544,14 +10544,23 @@
 
     <table class="table table-borderless">
         <tr>
-            <td class="text-center"></td>
+            <td class="text-center">
+                <p class="mb-5">{{ __('Mengetahui') }}</p>
+                <p>{{ optional($submission->authorizedByCoDean)->name ?? '...............' }}</p>
+            </td>
             <td class="w-25"></td>
-            @if($submission->status !== 'unauthorized')
-                <td class="text-center">
-                    <p class="mb-5">{{ __('Mengetahui') }}</p>
-                    <p>{{ optional($submission->authorized)->name ?? '(Belum Diatur)' }}</p>
-                </td>
-            @endif
+            <td class="text-center">
+                <p class="mb-5">{{ __('Mengetahui') }}</p>
+                <p>{{ optional($submission->authorized)->name ?? '...............' }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="w-25"></td>
+            <td class="text-center">
+                <p class="mb-5">{{ __('Menyetujui') }}</p>
+                <p>{{ optional($submission->approvedByCoDean)->name ?? '...............' }}</p>
+            </td>
+            <td class="w-25"></td>
         </tr>
     </table>
 </div>

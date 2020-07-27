@@ -10,6 +10,10 @@ class Submission extends Model
     public $statuses = [
         'unauthorized' => 'Belum Diotorisasi Kapordi',
         'authorized' => 'Sudah Diotorisasi Kaprodi',
+        'authorized-co-dean' => 'Diketahui oleh Wakil Dekan 2',
+        'revision-co-dean' => 'Direvisi oleh Wakil Dekan 1',
+        'approved-co-dean' => 'Disetujui oleh Wakil Dekan 1',
+        'rejected-co-dean' => 'Ditolak oleh Wakil Dekan 1',
         'approved' => 'Disetujui Dekan',
         'rejected' => 'Ditolak Dekan',
     ];
@@ -35,6 +39,9 @@ class Submission extends Model
         'grant',
         'category_id',
         'authorized_by',
+        'authorized_by_co_dean',
+        'approved_by_co_dean',
+        'approved_by',
     ];
 
     /**
@@ -211,5 +218,21 @@ class Submission extends Model
     public function authorized()
     {
         return $this->belongsTo(User::class, 'authorized_by', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function authorizedByCoDean()
+    {
+        return $this->belongsTo(User::class, 'authorized_by_co_dean', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function approvedByCoDean()
+    {
+        return $this->belongsTo(User::class, 'approved_by_co_dean', 'id');
     }
 }

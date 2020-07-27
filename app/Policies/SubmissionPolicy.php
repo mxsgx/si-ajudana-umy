@@ -131,6 +131,74 @@ class SubmissionPolicy
     }
 
     /**
+     * Determine whether the user can authorize the model.
+     *
+     * @param  User  $user
+     * @param  Submission  $submission
+     *
+     * @return mixed
+     */
+    public function authorizeCoDean(User $user, Submission $submission)
+    {
+        if ($user->role !== 'co-dean-2') {
+            return false;
+        }
+
+        return $user->faculty_id === $submission->lecturer->study->faculty_id;
+    }
+
+    /**
+     * Determine whether the user can approve the model.
+     *
+     * @param  User  $user
+     * @param  Submission  $submission
+     *
+     * @return mixed
+     */
+    public function approveCoDean(User $user, Submission $submission)
+    {
+        if ($user->role !== 'co-dean-1') {
+            return false;
+        }
+
+        return $user->faculty_id === $submission->lecturer->study->faculty_id;
+    }
+
+    /**
+     * Determine whether the user can revision the model.
+     *
+     * @param  User  $user
+     * @param  Submission  $submission
+     *
+     * @return mixed
+     */
+    public function revisionCoDean(User $user, Submission $submission)
+    {
+        if ($user->role !== 'co-dean-1') {
+            return false;
+        }
+
+        return $user->faculty_id === $submission->lecturer->study->faculty_id;
+    }
+
+    /**
+     * Determine whether the user can reject the model.
+     *
+     * @param  User  $user
+     * @param  Submission  $submission
+     *
+     * @return mixed
+     */
+    public function rejectCoDean(User $user, Submission $submission)
+    {
+        if ($user->role !== 'co-dean-1') {
+            return false;
+        }
+
+        return $user->faculty_id === $submission->lecturer->study->faculty_id;
+    }
+
+    /**
      * Determine whether the user can approve the model.
      *
      * @param  User  $user

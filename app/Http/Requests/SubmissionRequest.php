@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Submission;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SubmissionRequest extends FormRequest
@@ -25,6 +26,8 @@ class SubmissionRequest extends FormRequest
     {
         $role = auth()->user()->role;
         $method = strtolower($this->getMethod());
+        $statuses = collect(Submission::getModel()->statuses)->keys();
+        $status = $this->get('status');
         $rules = [
             'activity_id' => ['required', 'exists:activities,id'],
             'name' => ['required', 'string'],
@@ -46,10 +49,24 @@ class SubmissionRequest extends FormRequest
 
         if ($role === 'admin') {
             $rules['lecturer_id'] = ['required', 'exists:lecturers,id'];
-            $rules['status'] = ['required', 'in:unauthorized,authorized,approved,rejected'];
+            $rules['status'] = ['required', 'in:'.$statuses->join(',')];
 
-            if ($this->get('status') !== 'unauthorized') {
+            if ($status !== 'unauthorized') {
                 $rules['authorized_by'] = ['required', 'exists:users,id'];
+
+                if ($status !== 'authorized') {
+                    $rules['authorized_by_co_dean'] = ['required', 'exists:users,id'];
+
+                    if ($status !== 'authorized-co-dean' &&
+                        $status !== 'revision-co-dean' &&
+                        $status !== 'rejected-co-dean') {
+                        $rules['approved_by_co_dean'] = ['required', 'exists:users,id'];
+
+                        if ($status === 'approved') {
+                            $rules['approved_by'] = ['required', 'exists:users,id'];
+                        }
+                    }
+                }
             }
         }
 

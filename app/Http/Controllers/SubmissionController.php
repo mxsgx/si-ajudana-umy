@@ -40,6 +40,20 @@ class SubmissionController extends Controller
                 $q->whereHas('study', function ($q) use ($faculty_id) {
                     $q->where('faculty_id', '=', $faculty_id);
                 });
+            })->whereIn('status', ['approved-co-dean', 'approved', 'rejected']);
+        } elseif ($role === 'co-dean-1') {
+            $faculty_id = auth()->user()->faculty_id;
+            $query->whereHas('lecturer', function ($q) use ($faculty_id) {
+                $q->whereHas('study', function ($q) use ($faculty_id) {
+                    $q->where('faculty_id', '=', $faculty_id);
+                });
+            })->whereNotIn('status', ['unauthorized', 'authorized']);
+        } elseif ($role === 'co-dean-2') {
+            $faculty_id = auth()->user()->faculty_id;
+            $query->whereHas('lecturer', function ($q) use ($faculty_id) {
+                $q->whereHas('study', function ($q) use ($faculty_id) {
+                    $q->where('faculty_id', '=', $faculty_id);
+                });
             })->whereNotIn('status', ['unauthorized']);
         } elseif ($role === 'head-of-program-study') {
             $study_id = auth()->user()->study_id;
@@ -399,16 +413,67 @@ class SubmissionController extends Controller
         ]);
     }
 
-    public function approve(Submission $submission)
+    public function authorizeCoDean(Request $request, Submission $submission)
     {
         if ($submission->status === 'authorized') {
-            if ($submission->update([
-                'status' => 'approved',
-            ])) {
+            $data = [
+                'status' => 'authorized-co-dean',
+            ];
+
+            if (auth()->user()->role === 'admin') {
+                $this->validate($request, [
+                    'authorized_by_co_dean' => ['required', 'exists:users,id'],
+                ]);
+
+                $data['authorized_by_co_dean'] = $request->get('authorized_by_co_dean');
+            } elseif (auth()->user()->role === 'co-dean-2') {
+                $data['authorized_by_co_dean'] = auth()->user()->id;
+            }
+
+            if ($submission->update($data)) {
                 return redirect()->back()->with('notice', [
                     'type' => 'success',
                     'dismissible' => true,
-                    'content' => __('Pengajuan telah disetujui.'),
+                    'content' => __('Berhasil mengauthorisasi pengajuan.'),
+                ]);
+            }
+
+            return redirect()->back()->with('notice', [
+                'type' => 'danger',
+                'dismissible' => true,
+                'content' => __('Gagal mengauthorisasi pengajuan.'),
+            ]);
+        }
+
+        return redirect()->back()->with('notice', [
+            'type' => 'info',
+            'dismissible' => true,
+            'content' => __('Pengajuan sudah diauthorisasi.'),
+        ]);
+    }
+
+    public function approveCoDean(Request $request, Submission $submission)
+    {
+        if ($submission->status === 'authorized-co-dean' || $submission->status === 'revision-co-dean') {
+            $data = [
+                'status' => 'approved-co-dean',
+            ];
+
+            if (auth()->user()->role === 'admin') {
+                $this->validate($request, [
+                    'approved_by_co_dean' => ['required', 'exists:users,id'],
+                ]);
+
+                $data['approved_by_co_dean'] = $request->get('approved_by_co_dean');
+            } elseif (auth()->user()->role === 'co-dean-1') {
+                $data['approved_by_co_dean'] = auth()->user()->id;
+            }
+
+            if ($submission->update($data)) {
+                return redirect()->back()->with('notice', [
+                    'type' => 'success',
+                    'dismissible' => true,
+                    'content' => __('Berhasil menyetujui pengajuan.'),
                 ]);
             }
 
@@ -423,6 +488,101 @@ class SubmissionController extends Controller
             'type' => 'info',
             'dismissible' => true,
             'content' => __('Pengajuan sudah disetujui.'),
+        ]);
+    }
+
+    public function approve(Request $request, Submission $submission)
+    {
+        if ($submission->status === 'approved-co-dean') {
+            $data = [
+                'status' => 'approved',
+            ];
+
+            if (auth()->user()->role === 'admin') {
+                $this->validate($request, [
+                    'approved_by' => ['required', 'exists:users,id'],
+                ]);
+
+                $data['approved_by'] = $request->get('approved_by');
+            } elseif (auth()->user()->role === 'co-dean-2') {
+                $data['approved_by'] = auth()->user()->id;
+            }
+
+            if ($submission->update($data)) {
+                return redirect()->back()->with('notice', [
+                    'type' => 'success',
+                    'dismissible' => true,
+                    'content' => __('Berhasil menyetujui pengajuan.'),
+                ]);
+            }
+
+            return redirect()->back()->with('notice', [
+                'type' => 'danger',
+                'dismissible' => true,
+                'content' => __('Gagal menyetujui pengajuan.'),
+            ]);
+        }
+
+        return redirect()->back()->with('notice', [
+            'type' => 'info',
+            'dismissible' => true,
+            'content' => __('Pengajuan sudah disetujui.'),
+        ]);
+    }
+
+    public function revisionCoDean(Submission $submission)
+    {
+        $data = request()->validate(['note' => 'nullable|string']);
+        if ($submission->status === 'authorized-co-dean') {
+            if ($submission->update([
+                    'status' => 'revision-co-dean',
+                ] + $data)) {
+                return redirect()->back()->with('notice', [
+                    'type' => 'success',
+                    'dismissible' => true,
+                    'content' => __('Pengajuan telah direvisi.'),
+                ]);
+            }
+
+            return redirect()->back()->with('notice', [
+                'type' => 'danger',
+                'dismissible' => true,
+                'content' => __('Gagal merevisi pengajuan.'),
+            ]);
+        }
+
+        return redirect()->back()->with('notice', [
+            'type' => 'info',
+            'dismissible' => true,
+            'content' => __('Pengajuan sudah direvisi.'),
+        ]);
+    }
+
+    public function rejectCoDean(Submission $submission)
+    {
+        $data = request()->validate(['note' => 'nullable|string']);
+        if ($submission->status === 'authorized-co-dean' || $submission->status === 'revision-co-dean') {
+            if ($submission->update([
+                    'status' => 'rejected-co-dean',
+                ] + $data)) {
+                return redirect()->back()->with('notice', [
+                    'type' => 'success',
+                    'dismissible' => true,
+                    'content' => __('Pengajuan telah ditolak.'),
+                ]);
+            }
+
+            return redirect()->back()->with('notice', [
+                'type' => 'danger',
+                'dismissible' => true,
+                'content' => __('Gagal menolak pengajuan.'),
+            ]);
+        }
+
+        return redirect()->back()->with('notice', [
+            'type' => 'info',
+            'dismissible' => true,
+            'content' => __('Pengajuan sudah ditolak.'),
         ]);
     }
 

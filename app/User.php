@@ -19,6 +19,8 @@ class User extends Authenticatable
         'dean' => 'Dekanat',
         'head-of-program-study' => 'Kaprodi',
         'lecturer' => 'Dosen',
+        'co-dean-1' => 'Wakil Dekan 1',
+        'co-dean-2' => 'Wakil Dekan 2',
     ];
 
     /**

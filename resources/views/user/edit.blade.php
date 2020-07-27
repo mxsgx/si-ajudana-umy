@@ -45,7 +45,7 @@
                                 @enderror
                             </div>
 
-                            <template x-if="role === 'dean'">
+                            <template x-if="role === 'dean' || role === 'co-dean-1' || role === 'co-dean-2'">
                                 <div class="form-group">
                                     <label for="faculty_id">{{ __('Fakultas') }}</label>
                                     <select name="faculty_id" id="faculty_id" class="form-control @error('faculty_id') is-invalid @enderror" required>

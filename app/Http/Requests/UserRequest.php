@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -24,11 +25,12 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $method = strtolower($this->getMethod());
+        $roles = collect(User::getModel()->roles)->keys();
         $rules = [
             'name' => ['required', 'string'],
             'email' => ['required', 'email'],
             'password' => ['string'],
-            'role' => ['required', 'in:admin,dean,lecturer,head-of-program-study'],
+            'role' => ['required', 'in:'.$roles->join(',')],
             'study_id' => ['required_if:role,head-of-program-study', 'exists:studies,id'],
             'lecturer_id' => ['required_if:role,lecturer', 'exists:lecturers,id'],
             'faculty_id' => ['required_if:role,dean', 'exists:faculties,id'],
@@ -37,13 +39,15 @@ class UserRequest extends FormRequest
         if ($method === 'post') {
             $rules['password'][] = 'required';
             $rules['email'][] = 'unique:users,email';
-        } else if ($method === 'patch') {
-            $rules['password'][] = 'nullable';
-            $email = $this->get('email');
-            $user = $this->route('user');
+        } else {
+            if ($method === 'patch') {
+                $rules['password'][] = 'nullable';
+                $email = $this->get('email');
+                $user = $this->route('user');
 
-            if ($user->email !== $email) {
-                $rules['email'][] = 'unique:users,email';
+                if ($user->email !== $email) {
+                    $rules['email'][] = 'unique:users,email';
+                }
             }
         }
 

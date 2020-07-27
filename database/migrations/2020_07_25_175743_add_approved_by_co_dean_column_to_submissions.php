@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAuthorizedByColumnToSubmissions extends Migration
+class AddApprovedByCoDeanColumnToSubmissions extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddAuthorizedByColumnToSubmissions extends Migration
     public function up()
     {
         Schema::table('submissions', function (Blueprint $table) {
-            $table->unsignedBigInteger('authorized_by')->nullable();
+            $table->unsignedBigInteger('approved_by_co_dean')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddAuthorizedByColumnToSubmissions extends Migration
     public function down()
     {
         Schema::table('submissions', function (Blueprint $table) {
-            $table->dropColumn(['authorized_by']);
+            $table->dropColumn(['approved_by_co_dean']);
         });
     }
 }

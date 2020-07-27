@@ -11,7 +11,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request)
@@ -21,7 +21,7 @@ class UserController extends Controller
 
         if ($request->has('cari')) {
             $search = $request->get('cari');
-            $where = '%' . $search . '%';
+            $where = '%'.$search.'%';
             $query->where('name', 'LIKE', $where)->orWhere('email', 'LIKE', $where);
             $params['cari'] = $search;
         }
@@ -46,7 +46,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param UserRequest $request
+     * @param  UserRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(UserRequest $request)
@@ -73,7 +73,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param User $user
+     * @param  User  $user
      * @return \Illuminate\Http\Response
      */
     public function show(User $user)
@@ -84,7 +84,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param User $user
+     * @param  User  $user
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(User $user)
@@ -95,8 +95,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UserRequest $request
-     * @param User $user
+     * @param  UserRequest  $request
+     * @param  User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UserRequest $request, User $user)
@@ -112,10 +112,10 @@ class UserController extends Controller
         if ($data['role'] === 'lecturer') {
             $data['study_id'] = null;
             $data['faculty_id'] = null;
-        } else if ($data['role'] === 'dean') {
+        } elseif ($data['role'] === 'dean' || $data['role'] === 'co-dean-1' || $data['role'] === 'co-dean-2') {
             $data['study_id'] = null;
             $data['lecturer_id'] = null;
-        } else if ($data['role'] === 'head-of-program-study') {
+        } elseif ($data['role'] === 'head-of-program-study') {
             $data['faculty_id'] = null;
             $data['lecturer_id'] = null;
         } else {
@@ -142,7 +142,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param User $user
+     * @param  User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(User $user)

@@ -165,9 +165,21 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{submission}/authorize', 'SubmissionController@authorizeSubmission')
             ->name('submission.authorize')
             ->middleware('can:authorize,submission');
+        Route::patch('/{submission}/authorizeCoDean', 'SubmissionController@authorizeCoDean')
+            ->name('submission.authorize.co.dean')
+            ->middleware('can:authorizeCoDean,submission');
         Route::patch('/{submission}/approve', 'SubmissionController@approve')
             ->name('submission.approve')
             ->middleware('can:approve,submission');
+        Route::patch('/{submission}/approveCoDean', 'SubmissionController@approveCoDean')
+            ->name('submission.approve.co.dean')
+            ->middleware('can:approveCoDean,submission');
+        Route::patch('/{submission}/revisionCoDean', 'SubmissionController@revisionCoDean')
+            ->name('submission.revision.co.dean')
+            ->middleware('can:revisionCoDean,submission');
+        Route::patch('/{submission}/rejectCoDean', 'SubmissionController@rejectCoDean')
+            ->name('submission.reject.co.dean')
+            ->middleware('can:rejectCoDean,submission');
         Route::patch('/{submission}/reject', 'SubmissionController@reject')
             ->name('submission.reject')
             ->middleware('can:reject,submission');

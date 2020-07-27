@@ -53,13 +53,58 @@
                                     <div class="form-group">
                                         <label for="authorized_by">{{ __('Diauthorisasi Oleh:') }}</label>
                                         <select name="authorized_by" id="authorized_by" required
-                                                class="form-control @error('lecturer_id') is-invalid @enderror">
+                                                class="form-control @error('authorized_by') is-invalid @enderror">
                                             @foreach(\App\User::where('role', '=', 'head-of-program-study')->get() as $user)
                                                 <option value="{{ $user->id }}"
                                                         @if($submission->authorized_by == $user->id) selected @endif>{{ $user->name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('status')
+                                        @error('authorized_by')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </template>
+                                <template x-if="status !== 'unauthorized' && status !== 'authorized'">
+                                    <div class="form-group">
+                                        <label for="authorized_by_co_dean">{{ __('Diketahui Oleh:') }}</label>
+                                        <select name="authorized_by_co_dean" id="authorized_by_co_dean" required
+                                                class="form-control @error('authorized_by_co_dean') is-invalid @enderror">
+                                            @foreach(\App\User::where('role', '=', 'co-dean-2')->get() as $user)
+                                                <option value="{{ $user->id }}"
+                                                        @if($submission->authorized_by_co_dean == $user->id) selected @endif>{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('authorized_by_co_dean')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </template>
+                                <template x-if="['approved-co-dean', 'rejected', 'approved'].indexOf(status) > -1">
+                                    <div class="form-group">
+                                        <label for="approved_by_co_dean">{{ __('(Wadek) Disetujui Oleh:') }}</label>
+                                        <select name="approved_by_co_dean" id="approved_by_co_dean" required
+                                                class="form-control @error('approved_by_co_dean') is-invalid @enderror">
+                                            @foreach(\App\User::where('role', '=', 'co-dean-1')->get() as $user)
+                                                <option value="{{ $user->id }}"
+                                                        @if($submission->approved_by_co_dean == $user->id) selected @endif>{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('approved_by_co_dean')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </template>
+                                <template x-if="status === 'approved'">
+                                    <div class="form-group">
+                                        <label for="approved_by">{{ __('(Dekan) Disetujui Oleh:') }}</label>
+                                        <select name="approved_by" id="approved_by" required
+                                                class="form-control @error('approved_by') is-invalid @enderror">
+                                            @foreach(\App\User::where('role', '=', 'dean')->get() as $user)
+                                                <option value="{{ $user->id }}"
+                                                        @if($submission->approved_by == $user->id) selected @endif>{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('approved_by')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -272,17 +317,9 @@
                                                    for="finance-value-total">Total</label>
                                         </div>
 
-                                        <div class="d-md-table-cell p-2">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <label for="financial-value-total"
-                                                           class="input-group-text">Rp</label>
-                                                </div>
-
-                                                <input id="financial-value-total" type="number" class="form-control"
-                                                       value="{{ $submission->financials()->withPivot(['amount'])->newPivot()->where('submission_id', '=', $submission->id)->sum('amount') }}"
-                                                       min="0" disabled="">
-                                            </div>
+                                        <div class="d-md-table-cell p-2 align-middle align-items-center text-right">
+                                            <span
+                                                id="financial-value-total">Rp {{ number_format($submission->financials()->withPivot(['amount'])->newPivot()->where('submission_id', '=', $submission->id)->sum('amount'), 0, ',', '.') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -382,7 +419,10 @@
                 }
             });
 
-            jQuery('#financial-value-total').val(total);
+            jQuery('#financial-value-total').html(new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR'
+            }).format(total));
         }
 
         jQuery('.financial-item input[type="number"], .financial-item input[type="checkbox"]').on('change keyup', calculateFinance);
