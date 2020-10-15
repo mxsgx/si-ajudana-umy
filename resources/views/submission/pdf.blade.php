@@ -10449,6 +10449,7 @@
     </style>
 </head>
 <body>
+<h4 class="text-center">{{ __('SIM Ajuan Kegiatan Akademik FT') }}</h4>
 <div>
     <h6>Detail Pengajuan</h6>
     <div class="table-responsive mb-0">
@@ -10464,7 +10465,15 @@
             </tr>
             <tr>
                 <th>{{ __('Status') }}</th>
-                <td>{{ $submission->statuses[$submission->status]  }}</td>
+                @if($submission->status == 'authorized')
+                    <td>{{ __('Kaprodi: Setuju') }}</td>
+                @elseif($submission->status == 'authorized-co-dean')
+                    <td>{{ __('Kaprodi: Setuju, Wadek 2: Setuju') }}</td>
+                @elseif($submission->status == 'approved-co-dean' || $submission->status == 'approved')
+                    <td>{{ __('Kaprodi: Setuju, Wadek 1: Setuju, Wadek 2: Setuju') }}</td>
+                @else
+                    <td>{{ $submission->statuses[$submission->status] }}</td>
+                @endif
             </tr>
             @if($submission->status === 'rejected')
                 <tr>
@@ -10544,23 +10553,11 @@
 
     <table class="table table-borderless">
         <tr>
-            <td class="text-center">
-                <p class="mb-5">{{ __('Mengetahui') }}</p>
-                <p>{{ optional($submission->authorizedByCoDean)->name ?? '...............' }}</p>
-            </td>
-            <td class="w-25"></td>
-            <td class="text-center">
-                <p class="mb-5">{{ __('Mengetahui') }}</p>
-                <p>{{ optional($submission->authorized)->name ?? '...............' }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td class="w-25"></td>
+            <td class="w-75"></td>
             <td class="text-center">
                 <p class="mb-5">{{ __('Menyetujui') }}</p>
-                <p>{{ optional($submission->approvedByCoDean)->name ?? '...............' }}</p>
+                <p>{{ optional($submission->approvedBy)->name ?? '...............' }}</p>
             </td>
-            <td class="w-25"></td>
         </tr>
     </table>
 </div>

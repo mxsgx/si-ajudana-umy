@@ -235,4 +235,9 @@ class Submission extends Model
     {
         return $this->belongsTo(User::class, 'approved_by_co_dean', 'id');
     }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by', 'id');
+    }
 }
