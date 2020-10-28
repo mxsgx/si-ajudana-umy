@@ -50,7 +50,7 @@ class Submission extends Model
      * @var array
      */
     protected $casts = [
-        'date_start' => 'date'
+        'date_start' => 'date',
     ];
 
     /**

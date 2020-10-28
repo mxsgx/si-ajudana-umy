@@ -21,6 +21,9 @@
                         <thead>
                         <tr>
                             <th scope="col">{{ __('Nama') }}</th>
+                            <th scope="col">{{ __('Judul') }}</th>
+                            <th scope="col">{{ __('Tanggal') }}</th>
+                            <th scope="col">{{ __('Kategori') }}</th>
                             <th scope="col">{{ __('Status') }}</th>
                             <th scope="col">{{ __('Aksi') }}</th>
                         </tr>

@@ -131,13 +131,17 @@
                                 <label class="d-block">{{ __('Kategori') }}</label>
 
                                 @foreach(\App\Category::all(['id', 'name']) as $category)
-                                    <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="category-{{ $category->id }}" name="category_id"
-                                               class="custom-control-input" value="{{ $category->id }}" required
-                                               @if(old('category_id') == $category->id) checked @endif>
-                                        <label class="custom-control-label"
-                                               for="category-{{ $category->id }}">{{ $category->name }}</label>
-                                    </div>
+                                    @if($category->id === 3 && auth()->user()->role !== 'admin')
+                                        @continue
+                                    @else
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="category-{{ $category->id }}" name="category_id"
+                                                   class="custom-control-input" value="{{ $category->id }}" required
+                                                   @if(old('category_id') == $category->id) checked @endif>
+                                            <label class="custom-control-label"
+                                                   for="category-{{ $category->id }}">{{ $category->name }}</label>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </div>
 
