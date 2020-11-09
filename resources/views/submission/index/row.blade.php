@@ -1,5 +1,6 @@
 <tr>
-    <td>{{ $loop->iteration * (intval(request()->get('page', 1)) ?: 1) }}</td>
+    @php($currentPage = request()->get('page', 1))
+    <td>{{ $loop->iteration + ($currentPage > 1 ? 10 * (intval($currentPage) ?: 1) : 0) }}</td>
     <td>{{ $submission->activity->name }}</td>
     <td>{{ $submission->lecturer->name }}</td>
     <td>{{ $submission->title }}</td>
