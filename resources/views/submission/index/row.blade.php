@@ -1,5 +1,5 @@
 <tr>
-    <td>{{ $loop->iteration }}</td>
+    <td>{{ $loop->iteration * (intval(request()->get('page', 1)) ?: 1) }}</td>
     <td>{{ $submission->activity->name }}</td>
     <td>{{ $submission->lecturer->name }}</td>
     <td>{{ $submission->title }}</td>
