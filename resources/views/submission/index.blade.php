@@ -19,17 +19,23 @@
                 <div class="table-responsive py-2">
                     <table class="table table-hover">
                         <thead>
-                        <tr>
-                            <th scope="col">{{ __('Nama') }}</th>
-                            <th scope="col">{{ __('Judul') }}</th>
-                            <th scope="col">{{ __('Tanggal') }}</th>
-                            <th scope="col">{{ __('Kategori') }}</th>
-                            <th scope="col">{{ __('Status') }}</th>
-                            <th scope="col">{{ __('Aksi') }}</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">{{ __('Nama Kegiatan') }}</th>
+                                <th scope="col">{{ __('Dosen') }}</th>
+                                <th scope="col">{{ __('Judul') }}</th>
+                                <th scope="col">{{ __('Tanggal') }}</th>
+                                <th scope="col">{{ __('Kategori') }}</th>
+                                <th scope="col">{{ __('Status') }}</th>
+                                <th scope="col">{{ __('Aksi') }}</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @each('submission.index.row', $submissions, 'submission', 'submission.index.empty')
+                            @forelse($submissions as $submission)
+                                @include('submission.index.row')
+                            @empty
+                                @include('submission.index.empty')
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -46,10 +52,10 @@
 
 @push('body')
     <x-modal type="form"
-             id="delete"
-             method="delete"
-             :title="__('Konfirmasi Penghapusan')"
-             classes="modal-dialog-centered modal-dialog-scrollable"
-             :message="__('Ingin menghapus pengajuan ini?')">
+        id="delete"
+        method="delete"
+        :title="__('Konfirmasi Penghapusan')"
+        classes="modal-dialog-centered modal-dialog-scrollable"
+        :message="__('Ingin menghapus pengajuan ini?')">
     </x-modal>
 @endpush

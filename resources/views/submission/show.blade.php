@@ -131,7 +131,7 @@
                                     <a href="{{ route('submission.authorize', compact('submission')) }}"
                                        data-toggle="modal"
                                        data-target="#authorize"
-                                       class="btn btn-primary mr-2">{{ __('Authorisasi') }}</a>
+                                       class="btn btn-primary mr-2">{{ __('Mengetahui') }}</a>
                                 @endcan
                             @endif
                             @if($submission->status === 'authorized-co-dean' || $submission->status === 'revision-co-dean')
@@ -209,19 +209,19 @@
                      id="authorize"
                      method="patch"
                      :action="route('submission.authorize.co.dean', compact('submission'))"
-                     :title="__('Konfirmasi Authorisasi')"
+                     :title="__('Konfirmasi Mengetahui')"
                      classes="modal-dialog-centered modal-dialog-scrollable">
                 <x-slot name="message">
                     @if(auth()->user()->role === 'admin')
-                        <p>{{ __('Authorisasi pengajuan ini?') }}</p>
-                        <label for="authorized_by_co_dean" class="d-block">{{ __('Diauthorisasi oleh:') }}</label>
+                        <p>{{ __('Mengetahui pengajuan ini?') }}</p>
+                        <label for="authorized_by_co_dean" class="d-block">{{ __('(Wadek) Diketahui oleh:') }}</label>
                         <select name="authorized_by_co_dean" id="authorized_by_co_dean" class="form-control">
-                            @foreach(\App\User::where('role', '=', 'co-dean-2')->get() as $user)
+                            @foreach(\App\User::whereIn('role', ['co-dean-2'])->get() as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
                     @else
-                        <p>{{ __('Authorisasi pengajuan ini?') }}</p>
+                        <p>{{ __('Mengetahui pengajuan ini?') }}</p>
                     @endif
                 </x-slot>
             </x-modal>
@@ -240,7 +240,7 @@
                         <p>{{ __('Setujui pengajuan ini?') }}</p>
                         <label for="approved_by_co_dean" class="d-block">{{ __('Disetujui oleh:') }}</label>
                         <select name="approved_by_co_dean" id="approved_by_co_dean" class="form-control">
-                            @foreach(\App\User::where('role', '=', 'co-dean-1')->get() as $user)
+                            @foreach(\App\User::whereIn('role', ['co-dean-1'])->get() as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>

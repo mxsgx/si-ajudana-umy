@@ -434,21 +434,21 @@ class SubmissionController extends Controller
                 return redirect()->back()->with('notice', [
                     'type' => 'success',
                     'dismissible' => true,
-                    'content' => __('Berhasil mengauthorisasi pengajuan.'),
+                    'content' => __('Berhasil mengetahui pengajuan.'),
                 ]);
             }
 
             return redirect()->back()->with('notice', [
                 'type' => 'danger',
                 'dismissible' => true,
-                'content' => __('Gagal mengauthorisasi pengajuan.'),
+                'content' => __('Gagal mengetahui pengajuan.'),
             ]);
         }
 
         return redirect()->back()->with('notice', [
             'type' => 'info',
             'dismissible' => true,
-            'content' => __('Pengajuan sudah diauthorisasi.'),
+            'content' => __('Pengajuan sudah diketahui.'),
         ]);
     }
 

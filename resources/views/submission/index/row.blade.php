@@ -1,5 +1,7 @@
 <tr>
-    <td>{{ $submission->name }}</td>
+    <td>{{ $loop->iteration }}</td>
+    <td>{{ $submission->activity->name }}</td>
+    <td>{{ $submission->lecturer->name }}</td>
     <td>{{ $submission->title }}</td>
     <td>{{ optional($submission->date_start)->format('d-m-Y') }}
         - {{ optional($submission->date_end)->format('d-m-Y') }}</td>

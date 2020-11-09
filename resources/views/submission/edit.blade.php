@@ -66,10 +66,10 @@
                                 </template>
                                 <template x-if="status !== 'unauthorized' && status !== 'authorized'">
                                     <div class="form-group">
-                                        <label for="authorized_by_co_dean">{{ __('Diketahui Oleh:') }}</label>
+                                        <label for="authorized_by_co_dean">{{ __('(Wadek) Diketahui Oleh:') }}</label>
                                         <select name="authorized_by_co_dean" id="authorized_by_co_dean" required
                                                 class="form-control @error('authorized_by_co_dean') is-invalid @enderror">
-                                            @foreach(\App\User::where('role', '=', 'co-dean-2')->get() as $user)
+                                            @foreach(\App\User::whereIn('role', ['co-dean-1', 'co-dean-2'])->get() as $user)
                                                 <option value="{{ $user->id }}"
                                                         @if($submission->authorized_by_co_dean == $user->id) selected @endif>{{ $user->name }}</option>
                                             @endforeach
@@ -84,7 +84,7 @@
                                         <label for="approved_by_co_dean">{{ __('(Wadek) Disetujui Oleh:') }}</label>
                                         <select name="approved_by_co_dean" id="approved_by_co_dean" required
                                                 class="form-control @error('approved_by_co_dean') is-invalid @enderror">
-                                            @foreach(\App\User::where('role', '=', 'co-dean-1')->get() as $user)
+                                            @foreach(\App\User::whereIn('role', ['co-dean-1', 'co-dean-2'])->get() as $user)
                                                 <option value="{{ $user->id }}"
                                                         @if($submission->approved_by_co_dean == $user->id) selected @endif>{{ $user->name }}</option>
                                             @endforeach
