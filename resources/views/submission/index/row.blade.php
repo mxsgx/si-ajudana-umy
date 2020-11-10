@@ -1,5 +1,5 @@
 <tr>
-    <td>{{ ($submissions->currentPage() - 1) * $submissions->perPage() + $loop->index + 1 }}</td>
+    <td>{{ ($submissions->total() - $loop->index) - (($submissions->currentPage() - 1) * $submissions->perPage() ) }}</td>
     <td>{{ $submission->activity->name }}</td>
     <td>{{ $submission->lecturer->name }}</td>
     <td>{{ $submission->title }}</td>
@@ -11,11 +11,11 @@
         <p class="m-0">
             @can('delete', $submission)
                 <a href="{{ route('submission.destroy', compact('submission')) }}" class="btn btn-sm btn-danger m-1"
-                   data-toggle="modal" data-target="#delete">{{ __('Hapus') }}</a>
+                    data-toggle="modal" data-target="#delete">{{ __('Hapus') }}</a>
             @endcan
             @can('update', $submission)
                 <a href="{{ route('submission.edit', compact('submission')) }}"
-                   class="btn btn-sm btn-success m-1">{{ __('Sunting') }}</a>
+                    class="btn btn-sm btn-success m-1">{{ __('Sunting') }}</a>
             @endcan
         </p>
         <a href="{{ route('submission.pdf', compact('submission')) }}" class="btn btn-sm btn-secondary m-1">{{ __('PDF') }}</a>

@@ -20,7 +20,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">{{ __('No') }}</th>
                                 <th scope="col">{{ __('Nama Kegiatan') }}</th>
                                 <th scope="col">{{ __('Dosen') }}</th>
                                 <th scope="col">{{ __('Judul') }}</th>
