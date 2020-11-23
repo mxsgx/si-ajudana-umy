@@ -20,12 +20,18 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                                <th scope="col">{{ __('No') }}</th>
+                                <th scope="col">{{ __('NIK/NIP') }}</th>
                                 <th scope="col">{{ __('Nama') }}</th>
                                 <th scope="col">{{ __('Aksi') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @each('lecturer.index.row', $lecturers, 'lecturer', 'lecturer.index.empty')
+                            @forelse($lecturers as $lecturer)
+                                @include('lecturer.index.row')
+                            @empty
+                                @include('lecturer.index.empty')
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
