@@ -28,7 +28,7 @@ class LecturerController extends Controller
         }
 
         $query->orderBy('name');
-        $query->select(['id', 'name']);
+        $query->select(['id', 'name', 'nip', 'nik']);
 
         $lecturers = $query->paginate()->appends($params);
 
