@@ -17,6 +17,7 @@ class Submission extends Model
         'approved' => 'Disetujui Dekan',
         'rejected' => 'Ditolak Dekan',
     ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -113,7 +114,7 @@ class Submission extends Model
      */
     public function financials()
     {
-        return $this->belongsToMany(Financial::class);
+        return $this->belongsToMany(Financial::class)->withPivot('amount');
     }
 
     /**
@@ -182,15 +183,15 @@ class Submission extends Model
         $str = $this->date_start->translatedFormat('d F Y');
 
         if ($this->time_start) {
-            $str .= ' pukul '.$this->time_start->format('H:i').' WIB';
+            $str .= ' pukul ' . $this->time_start->format('H:i') . ' WIB';
         }
 
         if ($this->date_end) {
-            $str .= ' s.d '.$this->date_end->translatedFormat('d F Y');
+            $str .= ' s.d ' . $this->date_end->translatedFormat('d F Y');
         }
 
         if ($this->time_end) {
-            $str .= ' pukul '.$this->time_end->format('H:i').' WIB';
+            $str .= ' pukul ' . $this->time_end->format('H:i') . ' WIB';
         }
 
         return $str;

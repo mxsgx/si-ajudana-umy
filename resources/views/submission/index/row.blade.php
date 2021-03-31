@@ -5,7 +5,7 @@
     <td>{{ $submission->title }}</td>
     <td>{{ optional($submission->date_start)->format('d-m-Y') }}
         - {{ optional($submission->date_end)->format('d-m-Y') }}</td>
-    <td>{{ $submission->category->name }}</td>
+    <td>{{ optional($submission->category)->name }}</td>
     <td>{{ $submission->statuses[$submission->status] }}</td>
     <td>
         <p class="m-0">

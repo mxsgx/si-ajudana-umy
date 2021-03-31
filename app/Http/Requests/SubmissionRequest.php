@@ -36,7 +36,7 @@ class SubmissionRequest extends FormRequest
             'date_end' => ['nullable', 'date', 'date_format:Y-m-d'],
             'time_end' => ['nullable', 'date_format:H:i'],
             'place' => ['required', 'string'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => ['nullable', 'exists:categories,id'],
             'participant_id.*' => ['nullable', 'exists:participants,id'],
             'title' => ['required', 'string'],
             'writer' => ['required', 'string'],

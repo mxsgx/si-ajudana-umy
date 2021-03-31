@@ -201,7 +201,7 @@
                                     @else
                                         <div class="custom-control custom-radio custom-control-inline">
                                             <input type="radio" id="category-{{ $category->id }}" name="category_id"
-                                                   class="custom-control-input" value="{{ $category->id }}" required
+                                                   class="custom-control-input" value="{{ $category->id }}"
                                                    @if($submission->category_id == $category->id) checked @endif>
                                             <label class="custom-control-label"
                                                    for="category-{{ $category->id }}">{{ $category->name }}</label>

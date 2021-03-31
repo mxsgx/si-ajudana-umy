@@ -51,7 +51,7 @@
                                     </tr>
                                     <tr>
                                         <th>{{ __('Kategori') }}</th>
-                                        <td>{{ $submission->category->name }}</td>
+                                        <td>{{ optional($submission->category)->name }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Kategori Peserta') }}</th>

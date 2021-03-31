@@ -14,4 +14,9 @@ class Faculty extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function studies()
+    {
+        return $this->hasMany(Study::class);
+    }
 }

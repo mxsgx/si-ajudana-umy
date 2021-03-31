@@ -190,4 +190,10 @@ Route::middleware('auth')->group(function () {
             ->name('submission.pdf')
             ->middleware('can:view,submission');
     });
+
+    Route::prefix('laporan')->group(function () {
+        Route::get('/unit', 'ReportController@unit')->name('report.unit');
+        Route::get('/personal', 'ReportController@personal')->name('report.personal');
+        Route::get('/kegiatan', 'ReportController@activity')->name('report.activity');
+    });
 });

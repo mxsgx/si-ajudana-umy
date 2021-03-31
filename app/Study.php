@@ -14,4 +14,9 @@ class Study extends Model
     protected $fillable = [
         'name', 'faculty_id',
     ];
+
+    public function lecturers()
+    {
+        return $this->hasMany(Lecturer::class);
+    }
 }
