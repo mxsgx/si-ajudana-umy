@@ -14,4 +14,9 @@ class Activity extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
 }

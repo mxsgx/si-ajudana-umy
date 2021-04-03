@@ -195,5 +195,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/unit', 'ReportController@unit')->name('report.unit');
         Route::get('/personal', 'ReportController@personal')->name('report.personal');
         Route::get('/kegiatan', 'ReportController@activity')->name('report.activity');
+        Route::get('/rekap', 'ReportController@recap')->name('report.recap');
     });
 });

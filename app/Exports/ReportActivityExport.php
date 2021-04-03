@@ -26,6 +26,7 @@ class ReportActivityExport implements FromView
 
         $submissions = $submissionQuery->with('financials')->cursor()->collect()->map(function ($submission) {
             return [
+                'lecturer' => $submission->lecturer->name,
                 'name' => $submission->name,
                 'title' => $submission->title,
                 'study' => $submission->lecturer->study->name,

@@ -69,6 +69,7 @@
                                        href="{{ route('report.personal') }}">{{ __('Personal') }}</a>
                                     <a class="dropdown-item"
                                        href="{{ route('report.activity') }}">{{ __('Kegiatan') }}</a>
+                                    <a class="dropdown-item" href="{{ route('report.recap') }}">{{ __('Rekap') }}</a>
                                 </div>
                             </li>
                         @endif

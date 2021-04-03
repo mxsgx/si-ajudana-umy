@@ -54,6 +54,8 @@
                         <thead>
                         <tr>
                             <th scope="col">{{ __('No') }}</th>
+                            <th scope="col">{{ __('Nama') }}</th>
+                            <th scope="col">{{ __('Judul') }}</th>
                             <th scope="col">{{ __('Kegiatan') }}</th>
                             <th scope="col">{{ __('Tanggal') }}</th>
                             <th scope="col">{{ __('Biaya') }}</th>
@@ -63,19 +65,21 @@
                         @forelse($submissions as $submission)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>{{ $submission['lecturer'] }}</td>
+                                <td>{{ $submission['title'] }}</td>
                                 <td>{{ $submission['name'] }}</td>
                                 <td style="width:150px">{{ $submission['date'] }}</td>
                                 <td style="width:150px" class="text-right">Rp {{ number_format($submission['cost'], 0, ',', '.') }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="4">Tidak ada pengajuan</td>
+                                <td class="text-center" colspan="6">Tidak ada pengajuan</td>
                             </tr>
                         @endforelse
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th scope="col" colspan="3" class="text-right">{{ __('Biaya') }}</th>
+                            <th scope="col" colspan="5" class="text-right">{{ __('Biaya') }}</th>
                             <th class="text-right">Rp {{ number_format(collect($submissions)->sum('cost'), 0, ',', '.') }}</th>
                         </tr>
                         </tfoot>
