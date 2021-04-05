@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Laporan Kegiatan'))
+@section('title', __('Laporan Rekap Dana'))
 
 @section('content')
     <div class="container">
@@ -28,8 +28,8 @@
 
         <div class="card">
             <div class="card-header bg-umy d-flex flex-row justify-content-between align-items-center align-middle">
-                <span class="d-block">{{ __('Laporan Rekap') }}</span>
-                <form action="{{ route('report.recap') }}" method="get">
+                <span class="d-block">{{ __('Laporan Rekap Dana') }}</span>
+                <form action="{{ route('report.recap.fund') }}" method="get">
                     <input value="export" name="action" type="hidden">
                     <input value="{{ request()->get('year') }}" name="year" type="hidden">
                     <input value="{{ request()->get('status') }}" name="status" type="hidden">
@@ -88,7 +88,7 @@
                                 Rp {{ number_format($calc->sum('Teknik Mesin'), 0, ',', '.') }}
                             </th>
                             <th class="text-right">
-                                Rp {{ number_format($calc->sum('Teknik Informasi'), 0, ',', '.') }}
+                                Rp {{ number_format($calc->sum('Teknologi Informasi'), 0, ',', '.') }}
                             </th>
                             <th class="text-right">
                                 Rp {{ number_format($calc->sum('Program Profesi Insinyur'), 0, ',', '.') }}
