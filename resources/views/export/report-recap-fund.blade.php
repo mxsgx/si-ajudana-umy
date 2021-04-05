@@ -48,7 +48,7 @@
             {{ $calc->sum('Teknik Mesin') }}
         </th>
         <th data-format="Rp #,##0_-">
-            {{ $calc->sum('Teknik Informasi') }}
+            {{ $calc->sum('Teknologi Informasi') }}
         </th>
         <th data-format="Rp #,##0_-">
             {{ $calc->sum('Program Profesi Insinyur') }}

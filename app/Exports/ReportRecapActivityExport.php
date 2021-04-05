@@ -7,7 +7,7 @@ use App\Submission;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
-class ReportRecapExport implements FromView
+class ReportRecapActivityExport implements FromView
 {
     public function view(): View
     {
@@ -46,13 +46,13 @@ class ReportRecapExport implements FromView
 
         $calc = $activities->map(function ($data) {
             return collect($data['submissions'])->map(function ($data) {
-                return collect($data)->sum('amount');
+                return collect($data)->count();
             });
         })->filter(function ($data) {
             return $data->isNotEmpty();
         });
 
-        return view('export.report-recap', [
+        return view('export.report-recap-activity', [
             'activities' => $activities,
             'calc' => $calc,
         ]);

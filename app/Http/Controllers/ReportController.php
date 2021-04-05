@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\Exports\ReportActivityExport;
 use App\Exports\ReportPersonalExport;
-use App\Exports\ReportRecapExport;
+use App\Exports\ReportRecapActivityExport;
+use App\Exports\ReportRecapFundExport;
 use App\Exports\ReportUnitExport;
 use App\Faculty;
 use App\Submission;
@@ -151,7 +152,68 @@ class ReportController extends Controller
         return view('report.activity', compact('activities', 'years', 'submissions'));
     }
 
-    public function recap()
+    public function recapActivity()
+    {
+        if (auth()->user()->role != 'admin') {
+            abort(401);
+        }
+
+        $activities = Activity::query();
+        $years = Submission::query()->selectRaw('date_format(date_start, "%Y") as date_year')->distinct()->get()->map(function ($submission) {
+            return $submission->date_year;
+        });
+
+        $activities = $activities->get()->map(function ($activity) {
+            return [
+                'name' => $activity->name,
+                'submissions' => $activity->submissions->filter(function ($submission) {
+                    $flag1 = true;
+                    $flag2 = true;
+
+                    if (request()->has('year') && request()->get('year')) {
+                        $flag1 = $submission->date_start->format('Y') == request()->get('year');
+                    }
+
+                    if (isset(Submission::getModel()->statuses[request('status')])) {
+                        $flag2 = $submission->status == request('status');
+                    }
+
+                    return $flag1 && $flag2;
+                })->map(function ($submission) {
+                    return [
+                        'study' => $submission->lecturer->study->name,
+                        'amount' => $submission->financials()->sum('amount'),
+                    ];
+                })->mapToGroups(function ($data) {
+                    return [
+                        $data['study'] => [
+                            'amount' => $data['amount']
+                        ],
+                    ];
+                }),
+            ];
+        });
+
+        $calc = $activities->map(function ($data) {
+            return collect($data['submissions'])->map(function ($data) {
+                return collect($data)->count();
+            });
+        })->filter(function ($data) {
+            return $data->isNotEmpty();
+        });
+
+        if (request()->has('action') && request()->get('action') === 'export') {
+            return Excel::download(new ReportRecapActivityExport, 'LAPORAN-REKAP-AKTIVITAS.xlsx');
+        }
+
+        return view('report.recap-activity', [
+            'years' => $years,
+            'activities' => $activities,
+            'calc' => $calc,
+        ]);
+    }
+
+    public function recapFund()
     {
         if (auth()->user()->role != 'admin') {
             abort(401);
@@ -202,10 +264,10 @@ class ReportController extends Controller
         });
 
         if (request()->has('action') && request()->get('action') === 'export') {
-            return Excel::download(new ReportRecapExport, 'LAPORAN-REKAP.xlsx');
+            return Excel::download(new ReportRecapFundExport, 'LAPORAN-REKAP-DANA.xlsx');
         }
 
-        return view('report.recap', [
+        return view('report.recap-fund', [
             'years' => $years,
             'activities' => $activities,
             'calc' => $calc,

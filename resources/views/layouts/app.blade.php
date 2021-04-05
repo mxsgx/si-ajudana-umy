@@ -69,7 +69,8 @@
                                        href="{{ route('report.personal') }}">{{ __('Personal') }}</a>
                                     <a class="dropdown-item"
                                        href="{{ route('report.activity') }}">{{ __('Kegiatan') }}</a>
-                                    <a class="dropdown-item" href="{{ route('report.recap') }}">{{ __('Rekap') }}</a>
+                                    <a class="dropdown-item" href="{{ route('report.recap.fund') }}">{{ __('Rekap Dana') }}</a>
+                                    <a class="dropdown-item" href="{{ route('report.recap.activity') }}">{{ __('Rekap Aktivitas') }}</a>
                                 </div>
                             </li>
                         @endif

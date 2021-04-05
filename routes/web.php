@@ -195,6 +195,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/unit', 'ReportController@unit')->name('report.unit');
         Route::get('/personal', 'ReportController@personal')->name('report.personal');
         Route::get('/kegiatan', 'ReportController@activity')->name('report.activity');
-        Route::get('/rekap', 'ReportController@recap')->name('report.recap');
+        Route::get('/rekap-aktivitas', 'ReportController@recapActivity')->name('report.recap.activity');
+        Route::get('/rekap-dana', 'ReportController@recapFund')->name('report.recap.fund');
     });
 });
