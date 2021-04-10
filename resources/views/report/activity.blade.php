@@ -12,6 +12,12 @@
                         <option value="{{ $activity->id }}" @if(request()->get('activity_id') == $activity->id) selected @endif>{{ $activity->name }}</option>
                     @endforeach
                 </select>
+                <select name="study_id" class="form-control">
+                    <option value="">Pilih Prodi (Semua)</option>
+                    @foreach($studies as $study)
+                        <option value="{{ $study->id }}" @if(request()->get('study_id') == $study->id) selected @endif>{{ $study->name }}</option>
+                    @endforeach
+                </select>
                 <div class="input-group-append">
                     <select name="year" class="form-control">
                         <option value="">Pilih Tahun (Semua)</option>
@@ -40,6 +46,7 @@
                     <input value="{{ request()->get('year') }}" name="year" type="hidden">
                     <input value="{{ request()->get('activity_id') }}" name="activity_id" type="hidden">
                     <input value="{{ request()->get('status') }}" name="status" type="hidden">
+                    <input value="{{ request()->get('study_id') }}" name="study_id" type="hidden">
                     <button class="btn btn-outline-light">{{ __('Excel') }}</button>
                 </form>
             </div>

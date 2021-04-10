@@ -9,6 +9,7 @@ use App\Exports\ReportRecapActivityExport;
 use App\Exports\ReportRecapFundExport;
 use App\Exports\ReportUnitExport;
 use App\Faculty;
+use App\Study;
 use App\Submission;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -115,6 +116,7 @@ class ReportController extends Controller
         }
 
         $activities = Activity::all();
+        $studies = Study::all();
         $yearsQuery = Submission::query();
         $submissionQuery = Submission::query();
 
@@ -129,6 +131,12 @@ class ReportController extends Controller
 
         if (isset(Submission::getModel()->statuses[request()->get('status')])) {
             $submissionQuery->where('status', request()->get('status'));
+        }
+
+        if (request()->has('study_id') && request()->get('study_id')) {
+            $submissionQuery->whereHas('lecturer', function ($q) {
+                $q->where('study_id', '=', request()->get('study_id'));
+            });
         }
 
         $years = $yearsQuery->selectRaw('date_format(date_start, "%Y") as date_year')->distinct()->get()->map(function ($submission) {
@@ -149,7 +157,7 @@ class ReportController extends Controller
             return Excel::download(new ReportActivityExport, 'LAPORAN-KEGIATAN.xlsx');
         }
 
-        return view('report.activity', compact('activities', 'years', 'submissions'));
+        return view('report.activity', compact('activities', 'years', 'submissions', 'studies'));
     }
 
     public function recapActivity()

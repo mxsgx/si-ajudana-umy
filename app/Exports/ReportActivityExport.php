@@ -24,6 +24,12 @@ class ReportActivityExport implements FromView
             $submissionQuery->where('status', request()->get('status'));
         }
 
+        if (request()->has('study_id') && request()->get('study_id')) {
+            $submissionQuery->whereHas('lecturer', function ($q) {
+                $q->where('study_id', '=', request()->get('study_id'));
+            });
+        }
+
         $submissions = $submissionQuery->with('financials')->cursor()->collect()->map(function ($submission) {
             return [
                 'lecturer' => $submission->lecturer->name,
